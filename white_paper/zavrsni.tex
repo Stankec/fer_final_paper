@@ -5,22 +5,56 @@
 
 \thesisnumber{000}
 
-\title{Naslov}
+\title{Praćenje aktivnosti korisnika usluge računalne provjere pravopisa}
 
 \author{Stanko Krtalić Rusendić}
 
 \maketitle
 
-% Ispis stranice s napomenom o umetanju izvornika rada. Uklonite naredbu \izvornik ako želite izbaciti tu stranicu.
-\izvornik
+% Ispis stranice s napomenom o umetanju izvornika rada.
+% Uklonite naredbu \izvornik ako želite izbaciti tu stranicu.
+% \izvornik
 
-% Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu, naredbu ostavite radi prazne stranice.
+% Dodavanje zahvale ili prazne stranice. Ako ne želite dodati zahvalu,
+% naredbu ostavite radi prazne stranice.
 \zahvala{}
 
 \tableofcontents
 
 \chapter{Uvod}
-Uvod rada. Nakon uvoda dolaze poglavlja u kojima se obrađuje tema.
+Internetske aplikacije dnevno posjećuju na tisuće korisnika koji koriste
+usluge aplikacije na različite načine. Obrasci ponašanja korisnika su bitni.
+Pomoću tih podataka se može lakše upravljati i preciznije unaprijediti pojedine
+usluge aplikacije.
+
+Glavni problem je identifikacija korisnika. Iako je moguće dozvoliti korisniku
+da stvori račun u Internetskoj aplikaciji, te ga tako identificirati, većina
+korisnika se ne odluči stvoriti račun niti se prijavi u postojeći račun ako im
+tim postupkom aplikacija ne nudi značajno proširenu funkcionalnost. Posljedica
+takvog ponašanja korisnika je gubitak podataka o njihovim uzorcima korištenja
+aplikacije.
+
+Stoga je cilj ovog završnog rada analiza izvedivosti i arhitekture, te
+implementacija sustav koji će omogućiti praćenje obrazaca ponašanja korisnika
+sustava za računalnu provjeru pravopisa koji nisu prijavljeni ili nemaju račun u
+Internetskoj aplikaciji.
+
+U sklopu ovog završnog rada će se analizirati i objasniti dostupne metode
+praćenja korisnika. Nakon toga sljedi opis i analiza arhitekture sustava.
+Potom sljedi detaljan opis programskog riješenja i tehnologija korištenih u
+izradi riješenja, te upute za instalaciju i pokretanje. Na posljetku će biti
+opisane ideje za daljnje unapređenje programskog riješenja.
+
+\chapter{Metode za pračenje korisnika}
+
+
+\chapter{Analiza i opis arhitekture idejnog riješenja}
+
+\chapter{Opis programskog riješenja}
+
+\chapter{Instalacija i pokretanje}
+
+\chapter{Ideje za daljnji razvoj projekta}
 
 \chapter{Zaključak}
 Zaključak.
@@ -29,13 +63,19 @@ Zaključak.
 \bibliographystyle{fer}
 
 \begin{sazetak}
-Sažetak na hrvatskom jeziku.
+Hrvatski akademski spelling checker (Hascheck) usluga je računalne provjere
+pravopisa dostupna korisnicima putem preglednika weba. Kako bi upravljali
+uslugom te uvodili poboljšanja i novosti, administratorima je važno znati
+kako korisnici koriste uslugu i kako se na sjedištu ponašaju. Vaš je zadatak
+opisati arhitekturu i razviti sustav koji će administratorima olakšati
+upravljanje korisnicima, koristeći mehanizme koje osiguravaju protokol HTTP i
+odgovarajuće funkcionalnosti preglednika.
 
+% TODO: Add keywords
 \kljucnerijeci{Ključne riječi, odvojene zarezima.}
 \end{sazetak}
 
-% TODO: Navedite naslov na engleskom jeziku.
-\engtitle{Title}
+\engtitle{Tracking the Activity of Online Spellchecker Users}
 \begin{abstract}
 Abstract.
 
