@@ -42,19 +42,19 @@ sustava za računalnu provjeru pravopisa koji nisu prijavljeni ili nemaju račun
 Internetskoj aplikaciji.
 
 U sklopu ovog završnog rada će se analizirati i objasniti dostupne metode
-praćenja korisnika. Nakon toga sljedi opis i analiza arhitekture sustava.
-Potom sljedi detaljan opis programskog riješenja i tehnologija korištenih u
-izradi riješenja, te upute za instalaciju i pokretanje. Na posljetku će biti
-opisane ideje za daljnje unapređenje programskog riješenja.
+praćenja korisnika. Nakon toga slijedi opis i analiza arhitekture sustava.
+Potom slijedi detaljan opis programskog rješenja i tehnologija korištenih u
+izradi rješenja, te upute za instalaciju i pokretanje. Na posljetku će biti
+opisane ideje za daljnje unapređenje programskog rješenja.
 
-\chapter{Metode za pračenje korisnika}
+\chapter{Metode za praćenje korisnika}
 Kako bi pratili, tj. identificirali, korisnika potrebno je prikupiti podatke
 pomoću kojih možemo jednoznačno, ili s visokom sigurnošću, ustanoviti o kojem
 se korisniku radi. Navedene metode pojedinačno mogu biti dosta neprecizne,
 međutim sve zajedno nam daju visoku statističku sigurnost da ćemo točno
 identificirati korisnika.
 
-\section{Metode pračenja pomoću HTTP protokola}
+\section{Metode praćenja pomoću HTTP protokola}
 Internetske aplikacije koriste HTTP protokol kako bi primile zahtjev od
 korisnika i kako bi mu prenijele generirani odgovor na zahtjev. Mehanizme koje
 protokol implementira u svrhu optimizaciju upita, te mehanizme za perzistenciju
@@ -111,7 +111,7 @@ izbrisao podatke.
 \subsection{Globalna IP adresa klijenta}
 Može se koristiti kao identifikator, međutim jako je nepouzdana. Naj
 rasprostranjeniji oblik IP adresa su IPv4 adrese koje se koriste od sredine
-1983. godine. Problem sa IPv4 standardom je maksimalni mogući broj adresa. Kako
+1983. godine. Problem s IPv4 standardom je maksimalni mogući broj adresa. Kako
 postoji više uređaja koji pristupaju internetu nego slobodnih IPv4 adresa,
 potrebno je reciklirati adrese. Tj. kada neki uređaj ne koristi njemu
 dodijeljenu IP adresu ona se dodjeljuje drugom uređaju.
@@ -133,7 +133,7 @@ koristiti u svrhu identifikacije korisnika. Međutim puno korisnika ima
 sličnu konfiguraciju mreže te je teško jednoznačno identificirati nekog
 korisnika.
 
-\section{Metode pračenja pomoću Internetskog preglednika}
+\section{Metode praćenja pomoću Internetskog preglednika}
 Korisnici koriste Internetske preglednike (eng. 'browser') kako bi ostvarili
 interakciju s aplikacijom, te kako bi na jednostavan i vizualno razumljiv način
 konzumirali HTML datoteke koje im ona šalje. Moderni preglednici implementiraju
@@ -172,7 +172,7 @@ računala.
 Ovakav način identifikacije korisnika je izrazito nepouzdan jer danas
 postoji ogroman broj sličnih ili identičnih računalnih konfiguracija.
 
-\chapter{Analiza i opis arhitekture idejnog riješenja}
+\chapter{Analiza i opis arhitekture idejnog rješenja}
 Programsko rješenje se mora integrirati s uslugom računalne provjere
 pravopisa. Kako nam je arhitektura i izvedba usluge za provjeru pravopisa
 nepoznata nalaže se arhitektura servisa.
@@ -194,13 +194,20 @@ generirati identifikator, te uputiti biblioteku koje podatke da pohrani ili
 servira korisniku.
 
 Aplikacija treba implementirati programsko sučelje preko kojeg može razgovarati
-sa bibliotekama.
+s bibliotekama.
 
-Usroj baze podataka je izrazito bitan. Kako se radi o potencijalno velikom setu
+Ustroj baze podataka je izrazito bitan. Kako se radi o potencijalno velikom setu
 podataka koje će aplikacija morati pretraživati bi svi primarni ključevi trebali
 biti tipa UUID. Te je izrazito bitno dobro postavljanje indeksa na kolumne
 tablica. Optimalna implementacija baze podataka bi bila PostgreSQL baza zbog
-brzine i mogučnosti pohranjivanja i pretraživanja indeksiranih no-SQL podataka.
+brzine i mogućnosti pohranjivanja i pretraživanja indeksiranih no-SQL podataka
+što omogućuje pohranjivanje kompleksnih seta podataka.
+
+Aplikacija za svakog korisnika stvara profil. Korisnikov profil se asocira uz
+njegov 'otisak prsta' koji predstavljaju podaci o CPU, GPU i kristalu računala
+koje posjećuje servis. Profil se također asocira uz oznake (eng. tags) koji
+predstavljaju oznake HTTP zaglavlja i putanju na koju je to zaglavlje bilo
+poslano. Konačno, profil se asocira i uz ip adresu s koje je upit napravljen.
 
 \subsection{Klijentska biblioteka}
 Klijentska aplikacija prikuplja podatke o pregledniku i računalu korisnika,
@@ -220,7 +227,7 @@ Problem izvršavanja logike na klijentovom pregledniku je sposobnost korisnika
 da ugasi mogućnost izvršavanja JavaScript skripti u pregledniku. Ovakva
 situacija nije česta, korisnik tim činom gubi cjelovitu funkcionalnost
 usluge za provjeru pravopisa. Međutim domišljat korisnik bi mogao iz izvornog
-JavaScript koda servisa izčitati putanje i tipove upita koje mora napraviti kako
+JavaScript koda servisa iščitati putanje i tipove upita koje mora napraviti kako
 bi servisu predao tekst na ispravljanje. Kao mehanizam detekcije takvog načina
 korištenja servisa postoji poslužiteljska biblioteka.
 
@@ -228,10 +235,10 @@ korištenja servisa postoji poslužiteljska biblioteka.
 Poslužiteljska biblioteka pri svakom korisnikovom upitu ekstrahira podatke iz
 zaglavlja HTTP upita i šalje ih na obradu Internetskoj aplikaciji.
 
-Internetska aplikacija odgovara biblioteci sa identifikatorom korisnika, ako
+Internetska aplikacija odgovara biblioteci s identifikatorom korisnika, ako
 on postoji, i podacima koje treba postaviti u zaglavlje HTTP odgovora.
 
-Poslužiteljska biblioteka može biti implementirana u bilokojem programskom
+Poslužiteljska biblioteka može biti implementirana u bilo kojem programskom
 jeziku.
 
 Poslužiteljska biblioteka služi kao mehanizam za detekciju korisnika koji nisu
@@ -248,17 +255,75 @@ klijentske i poslužiteljske biblioteke.
 \includegraphics[width=\textwidth]{er_diagram}
 ER dijagram prikazuje ustroj baze podataka.
 
-\chapter{Opis programskog riješenja}
+\chapter{Opis programskog rje��enja}
+Kao što je i opisano u prethodnom poglavlju. Programsko rješenje se sastoji od
+tri dijela.
+
+\section{Internetska aplikacija}
+Internetska aplikacija implementirana je u programskom jeziku Ruby pomoću Ruby
+on Rails aplikacijskog okvira (eng. framework). Ruby on Rails (u daljnjem tekstu
+Rails) nam nudi slojeve modela, pogleda i kontrolera (eng. MVC - Model View
+Controller), te mnoge biblioteke koje nas štite od sigurnosnih propusta poput
+injekcije SQL naredbi (eng. SQL injection), među straničnog skriptiranja (eng.
+Cross Site Scripting), preljeva kolačića (eng. Cookie overflow) i mnogih drugih.
+Osim što nam nudi visoki sigurnosni standard nam Rails nudi obradu upita kroz
+posredničke programe (eng. middleware) i bogati ekosustav gotovih biblioteka.
+
+U Ruby on Rails aplikacijama model reprezentira podatak iz baze podataka.
+Manipulacijom atributa modela se direktno manipuliraju podaci u bazi podataka.
+Kroz modele možemo i raditi upite nad bazom i dobivati kolekcije modela koji
+zadovoljavaju dani SQL upit. Rails se automatski brine o optimizaciji upita.
+
+Kontroleri u Ruby on Rails aplikacijama služe kao posrednički sloj između
+pogleda i modela. Rails aplikacija ne mora nužno odgovoriti s pogledom. Iako
+kontroleri služe kao posrednički sloj oni su u potpunosti zaslužni za formiranje
+odgovora korisniku.
+
+Pogledi su HTML datoteke koje se poslužuje kao odgovor na upit. Rails koristi
+ugrađeni Ruby kod (eng. Embeded Ruby - ERB) kako bi dinamički izmijenio HTML
+koji poslužuje klijentima.
+
+Rails aplikacija ima četiri modela. Profil u koji se pohranjuje identifikator
+korisnika. Zatim 'otiske prstiju' u koji se pohranjuju podaci specifični za
+korisnikovo računalo. IP adrese u koje se pohranjuju IP adrese s kojima je
+korisnik napravio zahtjeve na servis. I konačno, oznake za praćenje (eng.
+tracking tags) gdje se pohranjuju oznake HTTP zaglavlja.
+
+Postoji samo jedan kontroler. Taj kontroler je zaslužan za komunikaciju između
+aplikacije i biblioteka. Kako kontroler prima i odgovara na zahtjeve s JSON
+serijaliziranim objektima nema potrebe za pogledima.
+
+Logika za identifikaciju korisnika pomoću predanih podataka se nalazi u
+servisnim objektima (eng. service objects) koji razgovaraju s objektima za
+izgradnju SQL upita (eng. query objects). Ovakav način korištenja je proširenje
+obične MVC arhitekture. Cilj ovakvog proširenja je apstrakcija implementacije
+poslovne logike i baze podataka. Odnosno, cilj je omogućiti nam da možemo
+proizvoljno centralizirano mijenjati logiku, bez da moramo mijenjati kod u više
+datoteka.
+
+\section{Poslužiteljska biblioteka}
+Poslužiteljska biblioteka je implementirana kao Ruby datoteka, odnosno Ruby on
+Rails servisni objekt. Kontroler servisu predaje zaglavlja koja je dobio u
+zahtjevu, a servis mu odgovara sa zaglavljima koje mora postaviti u odgovoru,
+te identifikatorom korisnika ako je korisnik uspješno identificiran.
+
+\section{Klijentska biblioteka}
+Klijentska biblioteka implementirana je kao JavaScript objekt. Nakon što se
+doda u HTML koji se servira korisniku, potrebno je konfigurirati putanju
+Rails aplikacije i putanju na koju se dojavljuje identifikator korisnika.
+
+Biblioteka koristi evercookie biblioteku kako bi perzistirala podatke u
+klijentovom pregledniku.
 
 \chapter{Instalacija i pokretanje}
-Za pokretanje programskog riješenja potrebno je računalo sa operativnim sustavom
+Za pokretanje programskog rješenja potrebno je računalo s operativnim sustavom
 koji implementira POSIX ili MS-DOS standard na kojem je instaliran Ruby 2.3.0
 virtualni stroj, te pristup PosgreSQL bazi podataka.
 
 \section{UNIX}
 \subsection{Ruby}
 Dok je aplikaciju moguće upogoniti pomoću sistemske instalacije Ruby virtualnog
-stroja to nije preporučljivo za produkcijska okruženja jer ne ostavlja mogučnost
+stroja to nije preporučljivo za produkcijska okruženja jer ne ostavlja mogućnost
 pokretanja više aplikacija koje koriste različite verzije virtualnog stroja.
 
 Preporučena metoda instalacije virtualnog stroja je pomoću menedžera verzija.
@@ -331,10 +396,6 @@ pokrenuti sljedeće naredbe iz direktorija u kojem se nalazi aplikacija:
   cd web_app
   bundle install
 
-  cd ../demo_app
-  bundle install
-  cd ..
-
 \end{lstlisting}
 
 Konačno možemo pokrenuti aplikaciju i demo aplikaciju koja implementira
@@ -343,28 +404,25 @@ biblioteke:
 \begin{lstlisting}
 
   cd web_app
-  rails s -p 3000 &
-  cd ../demo_app
-  rails s -p 3001 &
+  rails s -p 3000
 
 \end{lstlisting}
 
 Ovim naredbama smo podignuli dvije web aplikacije. Aplikaciju opisanu u
-programskom riješenju i demonstracijsku aplikaciju koja implementira klijentsku
+programskom rješenju i demonstracijsku aplikaciju koja implementira klijentsku
 i poslužiteljsku biblioteku.
 
-Aplikacija koja predstavlja programsko riješenje nalazi se na URL adresi
-http://localhost:3000, a demonstracijska aplikacija na adresi
-http://localhost:3001
+Aplikacija koja predstavlja programsko rješenje nalazi se na URL adresi
+http://localhost:3000
 
 \section{MS-DOS}
 \subsection{Ruby}
-Instalirati Ruby na Windows operativnim sustavima je najlakše napraviti pomoću
+Instalirati Ruby na Windows operativnim sustavima je najlak��e napraviti pomoću
 instalacijskog čarobnjaka kojeg se može preuzeti s ove poveznice:
 http://rubyinstaller.org/
 
 \subsection{PostgreSQL}
-PostgreSQL bazu podataka je najlakše instalirati kroz instalacijski čarubnjak
+PostgreSQL bazu podataka je najlakše instalirati kroz instalacijski čarobnjak
 dostupan na ovoj poveznici https://www.postgresql.org/download/
 
 \subsection{Aplikacija}
@@ -377,88 +435,93 @@ aplikacije i potom izvršiti sljedeće naredbe:
   gem install bundler
   cd web_app
   bundle install
-  rails s -p 3000 &
-  cd ../demo_app
-  bundle install
-  rails s -p 3001 &
+  rails s -p 3000
 
 \end{lstlisting}
 
 Ovim naredbama smo podignuli dvije web aplikacije. Aplikaciju opisanu u
-programskom riješenju i demonstracijsku aplikaciju koja implementira klijentsku
+programskom rješenju i demonstracijsku aplikaciju koja implementira klijentsku
 i poslužiteljsku biblioteku.
 
-Aplikacija koja predstavlja programsko riješenje nalazi se na URL adresi
-http://localhost:3000, a demonstracijska aplikacija na adresi
-http://localhost:3001
+Aplikacija koja predstavlja programsko rješenje nalazi se na URL adresi
+http://localhost:3000
 
 \chapter{Ideje za daljnji razvoj projekta}
-Programsko riješenje se može dalje unaprijeđivati. U nastavku je nekoliko ideja
-koje bi mogle značajno unaprijediti programsko riješenje:
+Programsko rješenje se može dalje unaprjeđivati. U nastavku je nekoliko ideja
+koje bi mogle značajno unaprijediti programsko rješenje:
 
 \section{Prijava korisnika}
 U sustav bi se mogao implementirati sustav za stvaranje korisničkih računa za
-pojedinačne korisnike i za firme. To bi omogučilo da se sustav monetizira
-iznajmljivanjem odnosno plačanjem pristupa.
+pojedinačne korisnike i za firme. To bi omogućilo da se sustav monetizira
+iznajmljivanjem odnosno plaćanjem pristupa.
 
 \section{Migracija podataka u sustav za obradu velike količine podataka}
 Za programsko riješenje bi se moglo reći da ima naivnu implementaciju dohvata,
 pohranjivanja i agregacije podataka. Makar će ovakav sustav zadovoljiti potrebe
 servisa za programsko ispravljanje pravopisa ne bi ga bilo moguće skalirati na
 servise koji primaju više upita. Kako bi se otklonio ovaj problem bilo trebalo
-bi periodički brisati podatke iz PostgreSQL baze i ostaviti samo agregirat
+bi periodički brisati podatke iz PostgreSQL baze i ostaviti samo agregati
 obrisanih podataka. Obrisane podatke bi bilo korisno migrirati u bazu podataka
 za obradu velikog broja podataka (eng. Big Data Database). U takvoj
-konfigurraciji bi sustav imao dvije baze podataka. PosgreSQL bazu koju bi
-koristo za identifikaciju korisnika u realnom vremenu i bazu podataka za veliki
+konfiguraciji bi sustav imao dvije baze podataka. PosgreSQL bazu koju bi
+koristio za identifikaciju korisnika u realnom vremenu i bazu podataka za veliki
 broj podataka koju bi koristio za generiranje statističkih modela. Generirani
-modeli bi se mogli iskorisiti za treniranje neuralne mreže koja bi mogla prema
+modeli bi se mogli iskoristiti za treniranje neuralne mreže koja bi mogla prema
 danim podacima identificirati korisnika.
 
 \section{Prikupljanje više podataka}
-U trenutnom programskom riješenju se ne prikupljaju svi mogući podaci od
+U trenutnom programskom rješenju se ne prikupljaju svi mogući podaci od
 korisnika već samo podaci potrebni za identifikaciju korisnika. Sustav bi se
 mogao unaprijediti pohranjivanjem dodatnih podataka koji bi se mogli iskoristiti
 u svrhu analize demografije korisnika.
 
-\section{Pračenje između uređaja}
-Prećenje između uređaja je moguće izvesti kombiniranjem tradicionalnog principa
-prijave u korisnički račun sa predstavljenim programskim riješenjem. U trenutku
+\section{Praćenje između uređaja}
+Praćenje između uređaja je moguće izvesti kombiniranjem tradicionalnog principa
+prijave u korisnički račun s predstavljenim programskim rješenjem. U trenutku
 prijave korisnika u sustav bi se Internetskoj aplikaciji dojavio njegov
-identifikator u sustavu u koji se proijavio. Kako se korisnik prijavljuje na
-različite uređaje bi se u Internetskoj aplikaciji njegov profil povezao sa
-podacima koje je sestav dobio od istog korisnika sa drugih uređaja, te bi mogao
-identificirati uređaj uz korisnika makar korisnik nije prijavljen u sustav.
+identifikator u sustavu u koji se prijavio. Kako se korisnik prijavljuje na
+različite uređaje bi se u Internetskoj aplikaciji njegov profil povezao s
+podacima koje je sustav dobio od istog korisnika s drugih uređaja, te bi mogao
+identificirati uređaj uz korisnika iako korisnik nije prijavljen u sustav.
 
 \chapter{Zaključak}
-Kao što se moglo zaključiti kroz dosadašnja poglavlja ovog rada, pračenje
+Kao što se moglo zaključiti kroz dosadašnja poglavlja ovog rada, praćenje
 aktivnosti korisnika usluge računalne provjere pravopisa je izvedivo i
 predstavlja neintruzivan oblik agregacije podataka u svrhu unapređenja usluge.
 
-Makar sustav ne gerentira točnost identifikacije korisnika. On to čini sa
+Iako sustav ne garantira da će točno identificirati korisnika. On to čini sa
 dovoljno velikom statističkom sigurnošću da se može koristiti u produkcijskim
 okruženjima.
 
-Uz daljnja unaprijeđenja sustava koja su opisana u pretkodnom poglavlju bi
+Uz daljnja unaprjeđenja sustava koja su opisana u prethodnom poglavlju bi
 se povećala pouzdanost sustava i sposobnost sustava da generira relevantne
-statističke podatke i modele koji bi se mogli iskoristit u svrhu unapređenja
+statističke podatke i modele koji bi se mogli iskoristiti u svrhu unapređenja
 usluge računalne provjere pravopisa.
 
 \bibliography{zavrsni}
 \bibliographystyle{fer}
 
 \begin{sazetak}
-TODO
+Praćenje aktivnosti korisnika usluge računalne provjere pravopisa.
 
-% TODO: Add keywords
-\kljucnerijeci{Ključne riječi, odvojene zarezima.}
+Procjena izvedivosti, te opis arhitekture i izvedbe sustava za praćenje
+aktivnosti korisnika na usluzi računalne provjere pravopisa poput Hrvatskog
+akademskog spelling checkera (Hascheck).
+
+\kljucnerijeci{praćenje aktivnosti korisnika, identifikacija korisnika, praćenje
+korisnika, Internetska aplikacija}
 \end{sazetak}
 
 \engtitle{Tracking the Activity of Online Spellchecker Users}
 \begin{abstract}
-Abstract.
+Tracking the Activity of Online Spellchecker Users.
 
-\keywords{Keywords.}
+Feasibility assessment, architecture and implementation of a system for
+monitoring user activity on a online spell check like the Croatian
+academic spelling checker (Hascheck).
+
+\keywords{user activity tracking, user identification, user tracking,
+  web application}
 \end{abstract}
 
 \end{document}
