@@ -50,9 +50,10 @@ opisane ideje za daljnje unapređenje programskog rješenja.
 \chapter{Metode za praćenje korisnika}
 Kako bi pratili, tj. identificirali, korisnika potrebno je prikupiti podatke
 pomoću kojih možemo jednoznačno, ili s visokom sigurnošću, ustanoviti o kojem
-se korisniku radi. Navedene metode pojedinačno mogu biti dosta neprecizne,
+se korisniku radi \cite{drj2015sansiscinfosecforum}. Navedene metode
+pojedinačno mogu biti dosta neprecizne,
 međutim sve zajedno nam daju visoku statističku sigurnost da ćemo točno
-identificirati korisnika.
+identificirati korisnika. \cite{janc2014tacim}
 
 \section{Metode praćenja pomoću HTTP protokola}
 Internetske aplikacije koriste HTTP protokol kako bi primile zahtjev od
@@ -66,6 +67,7 @@ Kolačići su mehanizam perzistencije stanja.
 Kolačići su tekstualne datoteke koje klijent i poslužitelje razmjenjuju pri
 svakom upitu. U njih se zapisuju podaci koje klijent ili poslužitelj
 žele perzistirati u slučaju greške ili za potrebe domenske logike.
+\cite{nwg1999http}
 
 Ovaj mehanizam se može iskoristiti u svrhu stvaranja 'kolačića za praćenje'.
 
@@ -75,7 +77,8 @@ slijed znamenki)
 
 Problem s kolačićem za praćenje je njegova transparentnost (korisnik
 lako može otkriti njegovo postojanje), dostupnost alata za uklanjanje
-kolačića, te direktiva 2009/136/EC Europske unije koja naliježe da
+kolačića, te direktiva 2009/136/EC Europske unije \cite{eurlex2019ec136}
+koja naliježe da
 aplikacije moraju jasno i transparentno obavijestiti korisnika koristi li
 kolačiće i u koje svrhe ih koriste.
 
@@ -125,7 +128,7 @@ za potpuni prelazak na novi standard.
 Kao jedno od rješenja problema
 nedostatka IPv4 adresa se koriste prevoditelji mrežnih adresa (eng.
 Network Address Translator) koji omogućuju da više korisnika iz iste mreže
-pristupa Internetu pod istom IP adresom.
+pristupa Internetu pod istom IP adresom. \cite{dip1981ip}
 
 Lokalne mreže nisu podložne čestim promjenama. Stoga se korisnikova IP
 adresa unutar lokalne mreže rijetko mijenja, te se ta informacija može
@@ -140,7 +143,7 @@ konzumirali HTML datoteke koje im ona šalje. Moderni preglednici implementiraju
 razne tehnologije i mehanizme pomoću kojih omogućuju Internetskoj aplikaciji da
 servira interaktivni sadržaj i optimira zahtjeve za vanjskim resursima. Slično
 kao i kod mehanizama HTTP protokola, ove mehanizme je moguće iskoristiti za
-pohranjivanje identifikatora.
+pohranjivanje identifikatora. \cite{w3cwg2013html}
 
 \subsection{Lokalno pohranjeni podaci (eng. Local Storage)}. Moderni
 preglednici dozvoljavaju korisniku da pomoću JavaScript, Flash i Silverlight
@@ -255,7 +258,7 @@ klijentske i poslužiteljske biblioteke.
 \includegraphics[width=\textwidth]{er_diagram}
 ER dijagram prikazuje ustroj baze podataka.
 
-\chapter{Opis programskog rje��enja}
+\chapter{Opis programskog rješenja}
 Kao što je i opisano u prethodnom poglavlju. Programsko rješenje se sastoji od
 tri dijela.
 
@@ -268,6 +271,7 @@ injekcije SQL naredbi (eng. SQL injection), među straničnog skriptiranja (eng.
 Cross Site Scripting), preljeva kolačića (eng. Cookie overflow) i mnogih drugih.
 Osim što nam nudi visoki sigurnosni standard nam Rails nudi obradu upita kroz
 posredničke programe (eng. middleware) i bogati ekosustav gotovih biblioteka.
+\cite{rormanual}
 
 U Ruby on Rails aplikacijama model reprezentira podatak iz baze podataka.
 Manipulacijom atributa modela se direktno manipuliraju podaci u bazi podataka.
@@ -417,7 +421,7 @@ http://localhost:3000
 
 \section{MS-DOS}
 \subsection{Ruby}
-Instalirati Ruby na Windows operativnim sustavima je najlak��e napraviti pomoću
+Instalirati Ruby na Windows operativnim sustavima je najlakše napraviti pomoću
 instalacijskog čarobnjaka kojeg se može preuzeti s ove poveznice:
 http://rubyinstaller.org/
 
@@ -462,9 +466,10 @@ servisa za programsko ispravljanje pravopisa ne bi ga bilo moguće skalirati na
 servise koji primaju više upita. Kako bi se otklonio ovaj problem bilo trebalo
 bi periodički brisati podatke iz PostgreSQL baze i ostaviti samo agregati
 obrisanih podataka. Obrisane podatke bi bilo korisno migrirati u bazu podataka
-za obradu velikog broja podataka (eng. Big Data Database). U takvoj
+za obradu velikog broja podataka (eng. Big Data Database) \cite{mongodb2015bde}
+U takvoj
 konfiguraciji bi sustav imao dvije baze podataka. PosgreSQL bazu koju bi
-koristio za identifikaciju korisnika u realnom vremenu i bazu podataka za veliki
+koristio za identifikaciju korisnika u realnom vremenu i bazu podataka za velki
 broj podataka koju bi koristio za generiranje statističkih modela. Generirani
 modeli bi se mogli iskoristiti za treniranje neuralne mreže koja bi mogla prema
 danim podacima identificirati korisnika.
