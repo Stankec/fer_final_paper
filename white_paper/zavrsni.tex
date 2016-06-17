@@ -1,5 +1,7 @@
 \documentclass[times, utf8, zavrsni]{fer}
 \usepackage{booktabs}
+\usepackage{listings}
+\graphicspath{ {images/} }
 
 \begin{document}
 
@@ -178,7 +180,7 @@ nepoznata nalaže se arhitektura servisa.
 Odnosno, programsko rješenje će biti Internetska aplikacija koju će druge
 aplikacije koristiti kao servis za identifikaciju korisnika.
 
-\section{Koponente sustava}
+\section{Komponente sustava}
 Sustav se sastoji od tri komponente. Programske biblioteke koja se izvodi u
 pregledniku korisnika (u daljnjem tekstu klijentska biblioteka),
 biblioteke koja se izvodi na poslužitelju (u daljnjem tekstu poslužiteljska
@@ -191,15 +193,36 @@ kako bi joj dojavile podatke o korisniku prema kojima će ona pronaći ili
 generirati identifikator, te uputiti biblioteku koje podatke da pohrani ili
 servira korisniku.
 
+Aplikacija treba implementirati programsko sučelje preko kojeg može razgovarati
+sa bibliotekama.
+
+Usroj baze podataka je izrazito bitan. Kako se radi o potencijalno velikom setu
+podataka koje će aplikacija morati pretraživati bi svi primarni ključevi trebali
+biti tipa UUID. Te je izrazito bitno dobro postavljanje indeksa na kolumne
+tablica. Optimalna implementacija baze podataka bi bila PostgreSQL baza zbog
+brzine i mogučnosti pohranjivanja i pretraživanja indeksiranih no-SQL podataka.
+
 \subsection{Klijentska biblioteka}
 Klijentska aplikacija prikuplja podatke o pregledniku i računalu korisnika,
 zapisuje ih u format koji Internetska aplikacija može interpretirati i šalje na
 obradu.
 
-Kada dobije od Internetske aplikacije odgovor s identifikatorom ga zapisuje
-u sve dostupne medije za pohranu u klijentovom pregledniku, te dojavljuje
-usluzi za provjeru pravopisa identifikator korisnika i putanju kojoj je
-pristupio.
+Kada dobije od Internetske aplikacije odgovor koji sadrži identifikator,
+zapiše ga u sve dostupne medije za pohranu u klijentovom pregledniku, te
+dojavljuje usluzi za provjeru pravopisa identifikator korisnika i putanju kojoj
+je pristupio.
+
+Kako svi moderni preglednici implementiraju i dozvoljavaju izvršavanje
+JavaScript skripti na korisnikovom uređaju, implementacija ove biblioteke će
+biti u programskom jeziku JavaScript.
+
+Problem izvršavanja logike na klijentovom pregledniku je sposobnost korisnika
+da ugasi mogućnost izvršavanja JavaScript skripti u pregledniku. Ovakva
+situacija nije česta, korisnik tim činom gubi cjelovitu funkcionalnost
+usluge za provjeru pravopisa. Međutim domišljat korisnik bi mogao iz izvornog
+JavaScript koda servisa izčitati putanje i tipove upita koje mora napraviti kako
+bi servisu predao tekst na ispravljanje. Kao mehanizam detekcije takvog načina
+korištenja servisa postoji poslužiteljska biblioteka.
 
 \subsection{Poslužiteljska biblioteka}
 Poslužiteljska biblioteka pri svakom korisnikovom upitu ekstrahira podatke iz
@@ -208,12 +231,131 @@ zaglavlja HTTP upita i šalje ih na obradu Internetskoj aplikaciji.
 Internetska aplikacija odgovara biblioteci sa identifikatorom korisnika, ako
 on postoji, i podacima koje treba postaviti u zaglavlje HTTP odgovora.
 
+Poslužiteljska biblioteka može biti implementirana u bilokojem programskom
+jeziku.
+
+Poslužiteljska biblioteka služi kao mehanizam za detekciju korisnika koji nisu
+pokrenuli klijentsku biblioteku, te korisnika koji pokušavaju zaobići
+transparentne mehanizme identifikacije.
+
 \section{Dijagram toka}
+\includegraphics[width=\textwidth]{flow_chart}
+Dijagram toka prikazuje tok izvođenja programa od strane klijentskog
+preglednika, servisa za ispravljanje pravopisa, Internetske aplikacije,
+klijentske i poslužiteljske biblioteke.
+
 \section{ER dijagram}
+\includegraphics[width=\textwidth]{er_diagram}
+ER dijagram prikazuje ustroj baze podataka.
 
 \chapter{Opis programskog riješenja}
 
 \chapter{Instalacija i pokretanje}
+Za pokretanje programskog riješenja potrebno je računalo sa operativnim sustavom
+koji implementira POSIX ili MS-DOS standard na kojem je instaliran Ruby 2.3.0
+virtualni stroj, te pristup PosgreSQL bazi podataka.
+
+\section{UNIX}
+\subsection{Ruby}
+Dok je aplikaciju moguće upogoniti pomoću sistemske instalacije Ruby virtualnog
+stroja to nije preporučljivo za produkcijska okruženja jer ne ostavlja mogučnost
+pokretanja više aplikacija koje koriste različite verzije virtualnog stroja.
+
+Preporučena metoda instalacije virtualnog stroja je pomoću menedžera verzija.
+Rbenv je jedan od najpopularnijih manedžera verzija za Ruby virtualni stroj.
+Kako bi ga instalirali potreban nam je Git sustav za verzioniranje.
+
+Na debian distribucijama je potrebno izvršiti naredbu koja će na sustav
+instalirati Git:
+
+\begin{lstlisting}
+
+apt-get update
+sudo apt-get install build-essential
+apt-get install git
+
+\end{lstlisting}
+
+Potom je potrebno preuzeti rbenv pomoću Gita i instalirati ruby-build plugin:
+
+\begin{lstlisting}
+
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+cd ~/.rbenv && src/configure && make -C src
+
+# za sustave koji koriste ZSH terminal
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.zshrc
+
+# za Ubuntu Desktop operativne sustave
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+
+# za ostale operativne sustave
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
+
+~/.rbenv/bin/rbenv init
+git clone https://github.com/rbenv/ruby-build.git \
+~/.rbenv/plugins/ruby-build
+rbenv install 2.3.0
+rbenv global 2.3.0
+
+\end{lstlisting}
+
+\subsection{PostgreSQL}
+Za instalaciju PosgreSQL baze podataka potrebno je izvršiti sljedeće naredbe:
+
+\begin{lstlisting}
+
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/\
+`lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - |\
+sudo apt-key add -
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+
+\end{lstlisting}
+
+\subsection{Aplikacija}
+Kako bi se instalirala aplikacija potrebno ju je samo kopirati na računalo.
+To je moguće napraviti kopiranjem izvornog koda za CD-a ili pomoću Gita te
+pokrenuti sljedeće naredbe iz direktorija u kojem se nalazi aplikacija:
+
+\begin{lstlisting}
+
+  # ako zelite kopirati aplikaciju pomocu gita
+  cd
+  cd Desktop
+  git clone git@github.com:Stankec/fer_final_paper.git
+  cd fer_final_paper
+
+  gem install bundler
+  cd web_app
+  bundle install
+
+  cd ../demo_app
+  bundle install
+  cd ..
+
+\end{lstlisting}
+
+Konačno možemo pokrenuti aplikaciju i demo aplikaciju koja implementira
+biblioteke:
+
+\begin{lstlisting}
+
+  cd web_app
+  rails s -p 3000 &
+  cd ../demo_app
+  rails s -p 3001 &
+
+\end{lstlisting}
+
+Ovim naredbama smo podignuli dvije web aplikacije. Aplikaciju opisanu u
+programskom riješenju i demonstracijsku aplikaciju koja implementira klijentsku
+i poslužiteljsku biblioteku.
+
+Aplikacija koja predstavlja programsko riješenje nalazi se na URL adresi
+http://localhost:3000, a demonstracijska aplikacija na adresi
+http://localhost:3001
 
 \chapter{Ideje za daljnji razvoj projekta}
 
