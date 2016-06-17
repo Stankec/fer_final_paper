@@ -66,12 +66,12 @@ identifikacije korisnika.
 
     Kolačić za praćenje (eng. tracking cookie) služi kao spremište za podatak
     prema kojem možemo identificirati korisnika. (npr. identifikacijski broj ili
-    sljed znamenki)
+    slijed znamenki)
 
-    Problem sa kolačićem za praćenje je njegova transparentnost (korisnik
+    Problem s kolačićem za praćenje je njegova transparentnost (korisnik
     lako može otkriti njegovo postojanje), dostupnost alata za uklanjanje
     kolačića, te direktiva 2009/136/EC Europske unije koja naliježe da
-    aplikacije moraju jasno i transparentno obavjestiti korisnika koristi li
+    aplikacije moraju jasno i transparentno obavijestiti korisnika koristi li
     kolačiće i u koje svrhe ih koriste.
 
   \item \textbf{ETag i Last-Modified zaglavlja} su mehanizmi optimizacije upita.
@@ -79,15 +79,15 @@ identifikacije korisnika.
     Prvotno ih postavlja poslužitelj kada šalje klijentu odgovor, a klijent ih
     šalje poslužitelju pri svakom sljedećem upitu na istu putanju. Poslužitelj
     može iz poslanih zaglavlja ustanoviti je li se sadržaj koji se servira
-    promjenio od trenutka posljednjeg klijentovog upita i ovisno o tome
+    promijenio od trenutka posljednjeg klijentovog upita i ovisno o tome
     odgovoriti s novim sadržajem ili s praznim odgovorom. Ovaj mehanizam
     značajno ubrzava rad poslužitelja.
 
-    Prema standardu ETag može biti proizvoljan sljed znakova, dok Last-Modified
+    Prema standardu ETag može biti proizvoljan slijed znakova, dok Last-Modified
     treba predstavljati datum. Međutim format datuma za Last-Modified nije
-    standardiziran, te je efektivno isto proizvoljan sljed od 32 znaka.
+    standardiziran, te je efektivno isto proizvoljan slijed od 32 znaka.
 
-    Ovi mehanizmi se ponašaju slićno kao kolačići, te se mogu iskoristit u
+    Ovi mehanizmi se ponašaju slično kao kolačići, te se mogu iskoristiti u
     svrhu pohranjivanja identifikatora. Korisniku nije dostupan alat s kojim bi
     mogao lagano otkloniti ova zaglavlja, niti može lako otkriti u koju svrhu se
     koriste zaglavlja. Stoga je ova metoda identifikacije efikasnija od
@@ -101,11 +101,72 @@ identifikacije korisnika.
     Ponašanjem su identični kolačićima. Predstavljaju idealni način za
     pohranjivanje identifikatora jer korisnik ne posjeduje mehanizam s kojim bi
     izbrisao podatke.
+
+  \item \textbf{Globalna IP adresa klijenta}. Može se koristiti kao
+    identifikator, međutim jako je nepouzdana. Naj rasprostranjeniji oblik IP
+    adresa su IPv4 adrese koje se koriste od sredine 1983. godine. Problem sa
+    IPv4 standardom je maksimalni mogući broj adresa. Kako postoji više uređaja
+    koji pristupaju internetu nego slobodnih IPv4 adresa, potrebno je
+    reciklirati adrese. Tj. kada neki uređaj ne koristi njemu dodijeljenu IP
+    adresu ona se dodjeljuje drugom uređaju.
+
+    Stoga je ovakav mehanizam za identifikaciju korisnika izrazito nepouzdan.
+    Implementacijom IPv6 standarda bi bilo moguće svakom korisniku dodijeliti
+    unikatnu IP adresu. Međutim postojeća mrežna infrastruktura još nije spremna
+    za potpuni prelazak na novi standard.
+
+  \item \textbf{Lokalna IP adresa klijenta}. Kao jedno od rješenja problema
+    nedostatka IPv4 adresa se koriste prevoditelji mrežnih adresa (eng.
+    Network Address Translator) koji omogućuju da više korisnika iz iste mreže
+    pristupa Internetu pod istom IP adresom.
+
+    Lokalne mreže nisu podložne čestim promjenama. Stoga se korisnikova IP
+    adresa unutar lokalne mreže rijetko mijenja, te se ta informacija može
+    koristiti u svrhu identifikacije korisnika. Međutim puno korisnika ima
+    sličnu konfiguraciju mreže te je teško jednoznačno identificirati nekog
+    korisnika.
+
 \end{enumerate}
 
 Korisnici koriste Internetske preglednike (eng. 'browser') kako bi ostvarili
-interakciju sa aplikacijom, te kako bi na jednostavan i vizualno razumljiv način
-konzumirali HTML datoteke koje im ona šalje.
+interakciju s aplikacijom, te kako bi na jednostavan i vizualno razumljiv način
+konzumirali HTML datoteke koje im ona šalje. Moderni preglednici implementiraju
+razne tehnologije i mehanizme pomoću kojih omogućuju Internetskoj aplikaciji da
+servira interaktivni sadržaj i optimira zahtjeve za vanjskim resursima. Slično
+kao i kod mehanizama HTTP protokola, ove mehanizme je moguće iskoristiti za
+pohranjivanje identifikatora.
+
+\begin{enumerate}
+  \item \textbf{Lokalno pohranjeni podaci (eng. Local Storage)}. Moderni
+    preglednici dozvoljavaju korisniku da pomoću JavaScript, Flash i Silverlight
+    skripti korisniku ponudi interaktivni sadržaj koji se perzistira.
+
+    Slično kao i kod kolačića u HTTP protokolu, moguće je pohraniti podatke
+    na korisnikovo računalo te u njih pohraniti identifikator. Iako je ovakav
+    način pohrane podataka manje transparentan od kolačića, korisnicima su lako
+    dostupni alati za brisanje lokalno pohranjenih podataka.
+
+  \item \textbf{Podaci pohranjeni u svrhu brzog pristupa (eng. Cached objects)}.
+    Moderni preglednici pohranjuju podatke poput slika i CSS datoteka lokalno
+    kako bi korisniku mogli brže prikazati Internetsku stranicu. Pomoću
+    stenografskih metoda je moguće stvoriti sliku koja u sebi sadrži
+    identifikator i predati ju pregledniku da ju pohrani.
+
+  \item \textbf{Pomak takta sistemskog sata}. Svako računalo ima oscilacijski
+    kristal koji generira takt jezgre procesora i sistemskog sata. Svi
+    kristali imaju pomak od njihove rezonantne frekvencije koji je unikatan za
+    taj kristal.
+
+    Pomak frekvencije je moguće izmjeriti kroz preglednik i time jedinstveno
+    identificirati korisnikovo računalo.
+
+  \item \textbf{Informacije o komponentama računala}. Korisnika je moguće
+    identificirati prema popisu komponenta njegovog računala.
+
+    Ovakav način identifikacije korisnika je izrazito nepouzdan jer danas
+    postoji ogroman broj sličnih ili identičnih računalnih konfiguracija.
+
+\end{enumerate}
 
 \chapter{Analiza i opis arhitekture idejnog riješenja}
 
@@ -122,13 +183,7 @@ Zaključak.
 \bibliographystyle{fer}
 
 \begin{sazetak}
-Hrvatski akademski spelling checker (Hascheck) usluga je računalne provjere
-pravopisa dostupna korisnicima putem preglednika weba. Kako bi upravljali
-uslugom te uvodili poboljšanja i novosti, administratorima je važno znati
-kako korisnici koriste uslugu i kako se na sjedištu ponašaju. Vaš je zadatak
-opisati arhitekturu i razviti sustav koji će administratorima olakšati
-upravljanje korisnicima, koristeći mehanizme koje osiguravaju protokol HTTP i
-odgovarajuće funkcionalnosti preglednika.
+TODO
 
 % TODO: Add keywords
 \kljucnerijeci{Ključne riječi, odvojene zarezima.}
