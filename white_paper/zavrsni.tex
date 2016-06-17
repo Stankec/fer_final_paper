@@ -357,10 +357,92 @@ Aplikacija koja predstavlja programsko riješenje nalazi se na URL adresi
 http://localhost:3000, a demonstracijska aplikacija na adresi
 http://localhost:3001
 
+\section{MS-DOS}
+\subsection{Ruby}
+Instalirati Ruby na Windows operativnim sustavima je najlakše napraviti pomoću
+instalacijskog čarobnjaka kojeg se može preuzeti s ove poveznice:
+http://rubyinstaller.org/
+
+\subsection{PostgreSQL}
+PostgreSQL bazu podataka je najlakše instalirati kroz instalacijski čarubnjak
+dostupan na ovoj poveznici https://www.postgresql.org/download/
+
+\subsection{Aplikacija}
+Kao i kod instalacije na POSIX operativne sustave potrebno je kopirati izvorni
+kod aplikacije na računalo, otvoriti Command prompt i pomaknuti se u direktorij
+aplikacije i potom izvršiti sljedeće naredbe:
+
+\begin{lstlisting}
+
+  gem install bundler
+  cd web_app
+  bundle install
+  rails s -p 3000 &
+  cd ../demo_app
+  bundle install
+  rails s -p 3001 &
+
+\end{lstlisting}
+
+Ovim naredbama smo podignuli dvije web aplikacije. Aplikaciju opisanu u
+programskom riješenju i demonstracijsku aplikaciju koja implementira klijentsku
+i poslužiteljsku biblioteku.
+
+Aplikacija koja predstavlja programsko riješenje nalazi se na URL adresi
+http://localhost:3000, a demonstracijska aplikacija na adresi
+http://localhost:3001
+
 \chapter{Ideje za daljnji razvoj projekta}
+Programsko riješenje se može dalje unaprijeđivati. U nastavku je nekoliko ideja
+koje bi mogle značajno unaprijediti programsko riješenje:
+
+\section{Prijava korisnika}
+U sustav bi se mogao implementirati sustav za stvaranje korisničkih računa za
+pojedinačne korisnike i za firme. To bi omogučilo da se sustav monetizira
+iznajmljivanjem odnosno plačanjem pristupa.
+
+\section{Migracija podataka u sustav za obradu velike količine podataka}
+Za programsko riješenje bi se moglo reći da ima naivnu implementaciju dohvata,
+pohranjivanja i agregacije podataka. Makar će ovakav sustav zadovoljiti potrebe
+servisa za programsko ispravljanje pravopisa ne bi ga bilo moguće skalirati na
+servise koji primaju više upita. Kako bi se otklonio ovaj problem bilo trebalo
+bi periodički brisati podatke iz PostgreSQL baze i ostaviti samo agregirat
+obrisanih podataka. Obrisane podatke bi bilo korisno migrirati u bazu podataka
+za obradu velikog broja podataka (eng. Big Data Database). U takvoj
+konfigurraciji bi sustav imao dvije baze podataka. PosgreSQL bazu koju bi
+koristo za identifikaciju korisnika u realnom vremenu i bazu podataka za veliki
+broj podataka koju bi koristio za generiranje statističkih modela. Generirani
+modeli bi se mogli iskorisiti za treniranje neuralne mreže koja bi mogla prema
+danim podacima identificirati korisnika.
+
+\section{Prikupljanje više podataka}
+U trenutnom programskom riješenju se ne prikupljaju svi mogući podaci od
+korisnika već samo podaci potrebni za identifikaciju korisnika. Sustav bi se
+mogao unaprijediti pohranjivanjem dodatnih podataka koji bi se mogli iskoristiti
+u svrhu analize demografije korisnika.
+
+\section{Pračenje između uređaja}
+Prećenje između uređaja je moguće izvesti kombiniranjem tradicionalnog principa
+prijave u korisnički račun sa predstavljenim programskim riješenjem. U trenutku
+prijave korisnika u sustav bi se Internetskoj aplikaciji dojavio njegov
+identifikator u sustavu u koji se proijavio. Kako se korisnik prijavljuje na
+različite uređaje bi se u Internetskoj aplikaciji njegov profil povezao sa
+podacima koje je sestav dobio od istog korisnika sa drugih uređaja, te bi mogao
+identificirati uređaj uz korisnika makar korisnik nije prijavljen u sustav.
 
 \chapter{Zaključak}
-Zaključak.
+Kao što se moglo zaključiti kroz dosadašnja poglavlja ovog rada, pračenje
+aktivnosti korisnika usluge računalne provjere pravopisa je izvedivo i
+predstavlja neintruzivan oblik agregacije podataka u svrhu unapređenja usluge.
+
+Makar sustav ne gerentira točnost identifikacije korisnika. On to čini sa
+dovoljno velikom statističkom sigurnošću da se može koristiti u produkcijskim
+okruženjima.
+
+Uz daljnja unaprijeđenja sustava koja su opisana u pretkodnom poglavlju bi
+se povećala pouzdanost sustava i sposobnost sustava da generira relevantne
+statističke podatke i modele koji bi se mogli iskoristit u svrhu unapređenja
+usluge računalne provjere pravopisa.
 
 \bibliography{zavrsni}
 \bibliographystyle{fer}
