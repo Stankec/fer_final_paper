@@ -46,7 +46,66 @@ izradi riješenja, te upute za instalaciju i pokretanje. Na posljetku će biti
 opisane ideje za daljnje unapređenje programskog riješenja.
 
 \chapter{Metode za pračenje korisnika}
+Kako bi pratili, tj. identificirali, korisnika potrebno je prikupiti podatke
+pomoću kojih možemo jednoznačno, ili s visokom sigurnošću, ustanoviti o kojem
+se korisniku radi.
 
+Internetske aplikacije koriste HTTP protokol kako bi primile zahtjev od
+korisnika i kako bi mu prenijele generirani odgovor na zahtjev. Mehanizme koje
+protokol implementira u svrhu optimizaciju upita, te mehanizme za perzistenciju
+stanja između klijenta i poslužitelja je moguće iskoristiti u svrhu
+identifikacije korisnika.
+
+\begin{enumerate}
+  \item \textbf{Kolačići} (eng. cookies) su mehanizam perzistencije stanja.
+    Kolačići su tekstualne datoteke koje klijent i poslužitelje razmjenjuju pri
+    svakom upitu. U njih se zapisuju podaci koje klijent ili poslužitelj
+    žele perzistirati u slučaju greške ili za potrebe domenske logike.
+
+    Ovaj mehanizam se može iskoristiti u svrhu stvaranja 'kolačića za praćenje'.
+
+    Kolačić za praćenje (eng. tracking cookie) služi kao spremište za podatak
+    prema kojem možemo identificirati korisnika. (npr. identifikacijski broj ili
+    sljed znamenki)
+
+    Problem sa kolačićem za praćenje je njegova transparentnost (korisnik
+    lako može otkriti njegovo postojanje), dostupnost alata za uklanjanje
+    kolačića, te direktiva 2009/136/EC Europske unije koja naliježe da
+    aplikacije moraju jasno i transparentno obavjestiti korisnika koristi li
+    kolačiće i u koje svrhe ih koriste.
+
+  \item \textbf{ETag i Last-Modified zaglavlja} su mehanizmi optimizacije upita.
+    ETag i Last-Modified zaglavlja služe za dojavljivanje promjene sadržaja.
+    Prvotno ih postavlja poslužitelj kada šalje klijentu odgovor, a klijent ih
+    šalje poslužitelju pri svakom sljedećem upitu na istu putanju. Poslužitelj
+    može iz poslanih zaglavlja ustanoviti je li se sadržaj koji se servira
+    promjenio od trenutka posljednjeg klijentovog upita i ovisno o tome
+    odgovoriti s novim sadržajem ili s praznim odgovorom. Ovaj mehanizam
+    značajno ubrzava rad poslužitelja.
+
+    Prema standardu ETag može biti proizvoljan sljed znakova, dok Last-Modified
+    treba predstavljati datum. Međutim format datuma za Last-Modified nije
+    standardiziran, te je efektivno isto proizvoljan sljed od 32 znaka.
+
+    Ovi mehanizmi se ponašaju slićno kao kolačići, te se mogu iskoristit u
+    svrhu pohranjivanja identifikatora. Korisniku nije dostupan alat s kojim bi
+    mogao lagano otkloniti ova zaglavlja, niti može lako otkriti u koju svrhu se
+    koriste zaglavlja. Stoga je ova metoda identifikacije efikasnija od
+    kolačića.
+
+  \item \textbf{Certifikati vezani uz izvorište (eng. Origin Bound
+      Certificates)} poznatiji kao identifikatori kanala (eng. channelID), služe
+    za perzistenciju podataka između klijenta i poslužitelja na strani
+    poslužitelja.
+
+    Ponašanjem su identični kolačićima. Predstavljaju idealni način za
+    pohranjivanje identifikatora jer korisnik ne posjeduje mehanizam s kojim bi
+    izbrisao podatke.
+\end{enumerate}
+
+Korisnici koriste Internetske preglednike (eng. 'browser') kako bi ostvarili
+interakciju sa aplikacijom, te kako bi na jednostavan i vizualno razumljiv način
+konzumirali HTML datoteke koje im ona šalje.
 
 \chapter{Analiza i opis arhitekture idejnog riješenja}
 
