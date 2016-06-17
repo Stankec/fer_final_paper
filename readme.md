@@ -25,4 +25,4 @@ the same folder. The PDF should contain a table of contents and references.
 ## Application
 
 The application that implements the described algorithms is a web application
-written in Ruby using the Roda framework.
+written in Ruby using the Ruby on Rails framework.
