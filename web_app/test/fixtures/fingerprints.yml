@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  time_drift: 1
+  cpu_information: MyText
+  gpu_information: MyText
+  profile_id: 
+
+two:
+  time_drift: 1
+  cpu_information: MyText
+  gpu_information: MyText
+  profile_id: 

@@ -33,10 +33,7 @@ class Tracker
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     request = Net::HTTP::Post.new(tracker_app_uri.path)
-    request.body = {
-      type: :server,
-      http_headers: headers
-    }
+    request.body = tracking_info
     response = http.request(request)
 
     JSON.parse(response.body)
@@ -48,7 +45,8 @@ class Tracker
       http_headers: request.headers,
       global_ip: request.remote_ip,
       local_ip: request.ip,
-      path: request.original_url
+      path: request.original_url,
+      cookies: request.cookie_jar.instance_variable_get(:cookies)
     }
   end
 

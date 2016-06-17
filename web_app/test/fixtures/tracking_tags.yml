@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  profile_id: 
+  tag_type: MyString
+  tag: MyString
+  path: MyString
+
+two:
+  profile_id: 
+  tag_type: MyString
+  tag: MyString
+  path: MyString
