@@ -1,14 +1,14 @@
 class Tracker
-  attr_reader :headers
+  attr_reader :request
   attr_reader :tracker_app_url
 
-  def initialize(headers:, tracker_app_url:)
-    @headers = headers
+  def initialize(request:, tracker_app_url:)
+    @request = request
     @tracker_app_url = tracker_app_url
   end
 
   def call
-    headers.merge!(tracking_headers)
+    request.headers.merge!(tracking_headers)
     identifier
   end
 
@@ -40,6 +40,16 @@ class Tracker
     response = http.request(request)
 
     JSON.parse(response.body)
+  end
+
+  def tracking_info
+    {
+      type: :server,
+      http_headers: request.headers,
+      global_ip: request.remote_ip,
+      local_ip: request.ip,
+      path: request.original_url
+    }
   end
 
   def tracker_app_uri
